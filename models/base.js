@@ -11,38 +11,44 @@ class BaseSQLModel {
     }
 
     async findAll() {
-        const query = `SELECT * FROM ${this.tableName}`
-        const results = await this.executeQuery(query)
+        const query = 'SELECT * FROM ??'
+        const results = await this.executeQuery(query, [this.tableName])
         return results
     }
 
     async findById(id) {
-        const query = `SELECT * FROM ${this.tableName} WHERE id = ?`
-        const results = await this.executeQuery(query, [id])
+        const query = 'SELECT * FROM ?? WHERE ?? = ?'
+        const results = await this.executeQuery(query, [this.tableName, 'id', id])
         return results[0]
     }
 
     async findOne(where, value) {
-        const query = `SELECT * FROM ${this.tableName} WHERE ${where}='${value}'`
-        const results = await this.executeQuery(query, [where, value])
+        const query = 'SELECT * FROM ?? WHERE ?? = ?'
+        const results = await this.executeQuery(query, [this.tableName, where, value])
         return results[0]
     }
 
+    async findMany(where, value) {
+        const query = 'SELECT * FROM ?? WHERE ?? = ?'
+        const results = await this.executeQuery(query, [this.tableName, where, value])
+        return results
+    }
+
     async create(data) {
-        const query = `INSERT INTO ${this.tableName} SET ?`
-        const result = await this.executeQuery(query, data)
+        const query = 'INSERT INTO ?? SET ?'
+        const result = await this.executeQuery(query, [this.tableName, data])
         return result.insertId
     }
 
     async update(id, data) {
-        const query = `UPDATE ${this.tableName} SET ? WHERE id = ?`
-        const result = await this.executeQuery(query, [data, id])
+        const query = 'UPDATE ?? SET ? WHERE ?? = ?'
+        const result = await this.executeQuery(query, [this.tableName, data, 'id', id])
         return result.affectedRows
     }
 
     async delete(id) {
-        const query = `DELETE FROM ${this.tableName} WHERE id = ?`
-        const result = await this.executeQuery(query, [id])
+        const query = 'DELETE FROM ?? WHERE ?? = ?'
+        const result = await this.executeQuery(query, [this.tableName, 'id', id])
         return result.affectedRows
     }
 }
