@@ -26,6 +26,20 @@ class ArticleModel extends BaseSQLModel {
         const createdArticleId = await super.create(articleData)
         return createdArticleId
     }
+
+    async update(id, article) {
+        const articleData = Object.fromEntries(
+            ['name', 'slug', 'image', 'body', 'author_id']
+                .filter((field) => Object.hasOwn(article, field))
+                .map((field) => [field, article[field]])
+        )
+
+        if (Object.keys(articleData).length === 0) {
+            throw new Error('No article data provided for update')
+        }
+
+        return super.update(id, articleData)
+    }
 }
 
 module.exports = ArticleModel;
